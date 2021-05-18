@@ -35,6 +35,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 				app.sendTuesday(s, m)
 			case "wednesday":
 				app.sendWednesday(s, m)
+			case "github", "source":
+				app.sendGithub(s, m)
 			/* --- Bot commands for words --- */
 			/* --- Bot commands, but only admins --- */
 			case "addword":
