@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+    app:
+        container_name: pepebot_server
+        build: .
+        restart: always
+        depends_on:
+            - db
+        environment:
+            - DB_USER=
+            - DB_PASS=
+            - DISCORD_TOKEN=
+    db:
+        container_name: pepebot_database
+        image: mysql:8.0
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD:
+            MYSQL_DATABASE:
+            MYSQL_USER:
+            MYSQL_PASSWORD:
+        volumes:
+            - pepe_db_data:/var/lib/mysql
+
+volumes:
+    pepe_db_data: {}
