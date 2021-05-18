@@ -26,7 +26,15 @@ func (app *application) addWord(s *discordgo.Session, m *discordgo.MessageCreate
 		return
 	}
 
-	app.updateAllBadWords()
+	
+
+	err = app.updateAllBadWords()
+	if err != nil {
+		app.unknownError(err, s, true, m.ChannelID)
+		return
+	}
+
+	app.successMessage(s, m)
 }
 
 func (app *application) removeWord(s *discordgo.Session, m *discordgo.MessageCreate, splitCommand []string) {
@@ -53,7 +61,13 @@ func (app *application) removeWord(s *discordgo.Session, m *discordgo.MessageCre
 		return
 	}
 
-	app.updateAllBadWords()
+	err = app.updateAllBadWords()
+	if err != nil {
+		app.unknownError(err, s, true, m.ChannelID)
+		return
+	}
+
+	app.successMessage(s, m)
 }
 
 func (app *application) addAdmin(s *discordgo.Session, m *discordgo.MessageCreate, splitCommand []string) {
@@ -100,6 +114,8 @@ func (app *application) addAdmin(s *discordgo.Session, m *discordgo.MessageCreat
 		return
 	}
 
+	app.successMessage(s, m)
+
 }
 
 func (app *application) removeAdmin(s *discordgo.Session, m *discordgo.MessageCreate, splitCommand []string) {
@@ -145,5 +161,7 @@ func (app *application) removeAdmin(s *discordgo.Session, m *discordgo.MessageCr
 		app.unknownError(err, s, true, m.ChannelID)
 		return
 	}
+
+	app.successMessage(s, m)
 
 }

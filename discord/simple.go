@@ -228,3 +228,11 @@ func (app *application) contextLength(splitCommand []string) (error) {
 	}
 	return nil
 }
+
+func (app *application) successMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
+	_, err := s.ChannelMessageSend(m.ChannelID, "Success!")
+	if err != nil {
+		app.unknownError(err, s, true, m.ChannelID)
+		return
+	}
+}
