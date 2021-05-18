@@ -68,6 +68,7 @@ func (app *application) sendTuesday(s *discordgo.Session, m *discordgo.MessageCr
 			app.errorLog.Print(err)
 			return
 		}
+		return
 	}
 	_, err := s.ChannelMessageSend(m.ChannelID, "https://cdn.nicecock.eu/TBT.webm")
 	if err != nil {
@@ -83,6 +84,7 @@ func (app *application) sendWednesday(s *discordgo.Session, m *discordgo.Message
 			app.errorLog.Print(err)
 			return
 		}
+		return
 	}
 	_, month, day := time.Now().Date()
 	if month.String() == "May" && day == 18 {
