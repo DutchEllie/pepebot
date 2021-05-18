@@ -76,6 +76,30 @@ func (app *application) sendTuesday(s *discordgo.Session, m *discordgo.MessageCr
 	}
 }
 
+func (app *application) sendWednesday(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if time.Now().Weekday().String() != "Wednesday" {
+		_, err := s.ChannelMessageSend(m.ChannelID, "This command only works on wednesdays")
+		if err != nil {
+			app.errorLog.Print(err)
+			return
+		}
+	}
+	_, month, day := time.Now().Date()
+	if month.String() == "May" && day == 18 {
+		_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=z21HOwUk5oM")
+		if err != nil {
+			app.errorLog.Print(err)
+			return
+		}
+		return
+	}
+	_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=du-TY1GUFGk")
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+}
+
 func (app *application) findTrigger(s *discordgo.Session, m *discordgo.MessageCreate) {
 	/* Finding for every word in the allBadWords map of string slices
 	Check if the message contains that word

@@ -33,6 +33,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 				app.sendNigelGif(s, m)
 			case "tuesday":
 				app.sendTuesday(s, m)
+			case "wednesday":
+				app.sendWednesday(s, m)
 			/* --- Bot commands for words --- */
 			/* --- Bot commands, but only admins --- */
 			case "addword":
