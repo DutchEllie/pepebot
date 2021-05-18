@@ -31,6 +31,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 				app.sendCringe(s, m)
 			case "gif":
 				app.sendNigelGif(s, m)
+			case "tuesday":
+				app.sendTuesday(s, m)
 			/* --- Bot commands for words --- */
 			/* --- Bot commands, but only admins --- */
 			case "addword":

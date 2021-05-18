@@ -61,6 +61,21 @@ func (app *application) sendNigelGif(s *discordgo.Session, m *discordgo.MessageC
 	}
 }
 
+func (app *application) sendTuesday(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if time.Now().Weekday().String() != "Tuesday" {
+		_, err := s.ChannelMessageSend(m.ChannelID, "This command only works on tuesdays")
+		if err != nil {
+			app.errorLog.Print(err)
+			return
+		}
+	}
+	_, err := s.ChannelMessageSend(m.ChannelID, "https://cdn.nicecock.eu/TBT.webm")
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+}
+
 func (app *application) findTrigger(s *discordgo.Session, m *discordgo.MessageCreate) {
 	/* Finding for every word in the allBadWords map of string slices
 	Check if the message contains that word
