@@ -78,17 +78,17 @@ func (app *application) sendTuesday(s *discordgo.Session, m *discordgo.MessageCr
 }
 
 func (app *application) sendWednesday(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if time.Now().Weekday().String() != "Wednesday" {
-		_, err := s.ChannelMessageSend(m.ChannelID, "This command only works on wednesdays")
+	_, month, day := time.Now().Date()
+	if month.String() == "May" && day == 19 {
+		_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=z21HOwUk5oM")
 		if err != nil {
 			app.errorLog.Print(err)
 			return
 		}
 		return
 	}
-	_, month, day := time.Now().Date()
-	if month.String() == "May" && day == 19 {
-		_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=z21HOwUk5oM")
+	if time.Now().Weekday().String() != "Wednesday" {
+		_, err := s.ChannelMessageSend(m.ChannelID, "This command only works on wednesdays")
 		if err != nil {
 			app.errorLog.Print(err)
 			return
