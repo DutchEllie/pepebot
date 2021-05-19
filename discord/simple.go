@@ -87,7 +87,7 @@ func (app *application) sendWednesday(s *discordgo.Session, m *discordgo.Message
 		return
 	}
 	_, month, day := time.Now().Date()
-	if month.String() == "May" && day == 18 {
+	if month.String() == "May" && day == 19 {
 		_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=z21HOwUk5oM")
 		if err != nil {
 			app.errorLog.Print(err)
