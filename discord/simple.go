@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -107,6 +108,36 @@ func (app *application) sendGithub(s *discordgo.Session, m *discordgo.MessageCre
 	if err != nil {
 		app.errorLog.Print(err)
 		return
+	}
+}
+
+func (app *application) sendManyPepes(s *discordgo.Session, m *discordgo.MessageCreate, splitCommand []string) {
+	/* Check if admin */
+	r, err := app.checkIfAdmin(s, m)
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+	if !r {
+		return
+	}
+	
+	if len(splitCommand) <= 2 {
+		app.errorLog.Printf("many pepes command had no numeral argument")
+		s.ChannelMessageSend(m.ChannelID, "This command requires a numeral as a second argument, which is between 1 and 10")
+		return
+	}
+
+	val, err := strconv.Atoi(splitCommand[2])
+	if err != nil || val > 10 || val <= 0 {
+		app.errorLog.Printf("many pepes command had a non-numeral as argument")
+		s.ChannelMessageSend(m.ChannelID, "This command requires a numeral as a second argument, which is between 1 and 10")
+		return
+	}
+
+	for i := 0; i < val; i++ {
+		app.sendPepe(s, m)
+		time.Sleep(time.Millisecond * 500)
 	}
 }
 

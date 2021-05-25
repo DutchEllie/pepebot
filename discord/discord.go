@@ -38,6 +38,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 			case "github", "source":
 				app.sendGithub(s, m)
 			/* --- Bot commands for words --- */
+			case "pepes":
+				app.sendManyPepes(s, m, splitCommand)
 			/* --- Bot commands, but only admins --- */
 			case "addword":
 				app.addWord(s, m, splitCommand)
