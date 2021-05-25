@@ -21,6 +21,9 @@ type application struct {
 	adminroles *mysql.AdminRolesModel
 	trigger string
 	allBadWords map[string][]string
+
+	active bool
+	stop bool
 }
 
 func main() {

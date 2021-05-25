@@ -147,14 +147,35 @@ func (app *application) sendManyPepes(s *discordgo.Session, m *discordgo.Message
 
 	if (val <= 0 || val > 3) && !override {
 		s.ChannelMessageSend(m.ChannelID, "The amount has to be > 0 and < 4")
+		return
 	} else if val <= 0 && override {
 		s.ChannelMessageSend(m.ChannelID, "I know you're admin and all, but you still have to provide a positive integer amount of pepes to send...")
+		return
 	}
 
+	app.active = true
+
 	for i := 0; i < val; i++ {
-		go app.sendPepe(s, m)
-		//time.Sleep(time.Millisecond * 500)
+		if app.stop {
+			app.stop = false
+			break
+		}
+		app.sendPepe(s, m)
+		time.Sleep(time.Millisecond * 500)
 	}
+
+	app.active = false
+}
+
+func (app *application) stopRequest(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if app.active {
+		app.stop = true
+		s.ChannelMessageSend(m.ChannelID, "Emergency stop called, hopefully I stop now")
+	} else {
+		app.stop = false
+		s.ChannelMessageSend(m.ChannelID, "But I wasn't doing anything!")
+	}
+	
 }
 
 func (app *application) findTrigger(s *discordgo.Session, m *discordgo.MessageCreate) {

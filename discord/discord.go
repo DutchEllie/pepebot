@@ -40,6 +40,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 			/* --- Bot commands for words --- */
 			case "pepes":
 				app.sendManyPepes(s, m, splitCommand)
+			case "stop":
+				app.stopRequest(s, m)
 			/* --- Bot commands, but only admins --- */
 			case "addword":
 				app.addWord(s, m, splitCommand)
