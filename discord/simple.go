@@ -14,34 +14,41 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func (app *application) sendPepe(s *discordgo.Session, m *discordgo.MessageCreate) {
+func (app *application) getPepeLink() (string, error) {
 	resp, err := http.Get("http://bbwroller.com/random")
 	if err != nil {
-		app.errorLog.Print(err)
-		return
+		return "", err
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		app.errorLog.Print(err)
-		return
+		return "", err
 	}
 	rep, err := regexp.Compile("/static.*\\.jpg")
 	if err != nil {
-		app.errorLog.Print(err)
-		return
+		return "", err
 	}
 	pepes := rep.FindAllString(string(body), 200)
 	if pepes == nil {
-		app.errorLog.Printf("No pepes were found\n")
-		return
+		return "", err
 	}
 	randomIndex := rand.Intn(35)
 	url := "https://bbwroller.com"
 	url += pepes[randomIndex]
 
+	return url, nil
+}
+
+func (app *application) sendPepe(s *discordgo.Session, m *discordgo.MessageCreate) {
+	url, err := app.getPepeLink()
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+
 	_, err = s.ChannelMessageSend(m.ChannelID, url)
 	if err != nil {
 		app.errorLog.Print(err)
+		return
 	}
 }
 
@@ -155,14 +162,29 @@ func (app *application) sendManyPepes(s *discordgo.Session, m *discordgo.Message
 
 	app.active = true
 
+	var msg string = ""
 	for i := 0; i < val; i++ {
 		if app.stop {
 			app.stop = false
 			break
 		}
-		app.sendPepe(s, m)
-		time.Sleep(time.Millisecond * 500)
+		link, err := app.getPepeLink()
+		if err != nil {
+			app.errorLog.Print(err)
+			return
+		}
+		
+		if len(msg + link) > 1950 {
+			s.ChannelMessageSend(m.ChannelID, msg)
+			msg = ""
+			time.Sleep(time.Millisecond * 500)
+		} 
+
+		msg += link
+		msg += "\n"
 	}
+
+	s.ChannelMessageSend(m.ChannelID, msg)
 
 	app.active = false
 }
