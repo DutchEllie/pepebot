@@ -38,7 +38,7 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 			case "github", "source":
 				app.sendGithub(s, m)
 			/* --- Bot commands for words --- */
-			case "pepes":
+			case "spam":
 				app.sendManyPepes(s, m, splitCommand)
 			case "stop":
 				app.stopRequest(s, m)

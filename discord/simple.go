@@ -114,10 +114,10 @@ func (app *application) sendGithub(s *discordgo.Session, m *discordgo.MessageCre
 func (app *application) sendManyPepes(s *discordgo.Session, m *discordgo.MessageCreate, splitCommand []string) {
 	override := false
 
-	/* [0] is !pepe, [1] is pepes, [2] is amount, [3] is override*/
+	/* [0] is !pepe, [1] is spam, [2] is amount, [3] is override*/
 
 	if len(splitCommand) <= 2 {
-		app.errorLog.Printf("many pepes command had no numeral argument")
+		app.errorLog.Printf("spam command had no numeral argument")
 		s.ChannelMessageSend(m.ChannelID, "This command requires a numeral as a second argument, which is between 1 and 3")
 		return
 	}
@@ -140,7 +140,7 @@ func (app *application) sendManyPepes(s *discordgo.Session, m *discordgo.Message
 
 	val, err := strconv.Atoi(splitCommand[2])
 	if err != nil {
-		app.errorLog.Printf("many pepes command had a non-numeral as argument")
+		app.errorLog.Printf("spam command had a non-numeral as argument")
 		s.ChannelMessageSend(m.ChannelID, "This command requires a numeral as a second argument")
 		return
 	}
