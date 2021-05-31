@@ -2,6 +2,7 @@ package limiter
 
 import (
 	"errors"
+	"log"
 	"time"
 )
 
@@ -30,9 +31,11 @@ func (l *Limiter) CheckAllowed(userid string) error {
 	for i := 0; i < len(l.Logs[userid]); i++ {
 		/* If the timestamp plus the timelimit is happened before "Now" */
 		if l.Logs[userid][i].Timestamp.Add(l.TimeLimit).Before(time.Now()) {
+			log.Printf("Expired entry\n")
 			expiredEntries = append(expiredEntries, i)
 			continue
 		} else {
+			log.Printf("Increasing counter\n")
 			counter++
 			continue
 		}
@@ -42,6 +45,7 @@ func (l *Limiter) CheckAllowed(userid string) error {
 		l.removeAction(userid, expiredEntries[i])
 	}
 
+	log.Printf("Checking if %d is >= %d", counter, l.RateLimit)
 	if counter >= l.RateLimit {
 		return errors.New("rate limit exceeded")
 	} else {
