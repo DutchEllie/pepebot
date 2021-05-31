@@ -10,6 +10,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 	if m.Author.Bot {
 		return
 	}
+	app.infoLog.Printf("Adding entry\n")
+	app.limiter.LogInteraction(m.Author.ID, "messagecreate")
 
 	/* Check if the user is even allowed by the rate limiter */
 	err := app.limiter.CheckAllowed(m.Author.ID)
@@ -66,8 +68,5 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 		/* If the trigger wasn't the prefix of the message, we need to check all the words for a trigger */
 		app.findTrigger(s, m)
 	}
-
-	app.infoLog.Printf("Adding entry\n")
-	app.limiter.LogInteraction(m.Author.ID, "messagecreate")
 
 }

@@ -45,6 +45,7 @@ func main() {
 	limiter := &limiter.Limiter{
 		RateLimit: 5,
 		TimeLimit: time.Second * 15,
+		Logs:      make(map[string][]*limiter.Action),
 	}
 
 	app := &application{
