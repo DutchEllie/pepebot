@@ -11,6 +11,8 @@ services:
             - DB_USER=
             - DB_PASS=
             - DISCORD_TOKEN=
+            - RATE_LIMIT=
+            - TIME_LIMIT=
     db:
         container_name: pepebot_database
         image: mysql:8.0
