@@ -28,11 +28,11 @@ func (l *Limiter) LogInteraction(userid string, action string) {
 Returns an error if the amount of log entries exceeds the ratelimit */
 func (l *Limiter) CheckAllowed(userid string) error {
 	counter := 0
-	expiredEntries := make([]int, 0)
+	expiredEntries := make([]*Action, 0)
 	for i := 0; i < len(l.Logs[userid]); i++ {
 		/* If the timestamp plus the timelimit is happened before "Now" */
 		if l.Logs[userid][i].Timestamp.Add(l.TimeLimit).Before(time.Now()) {
-			expiredEntries = append(expiredEntries, i)
+			expiredEntries = append(expiredEntries, l.Logs[userid][i])
 			continue
 		} else {
 			counter++
@@ -52,7 +52,14 @@ func (l *Limiter) CheckAllowed(userid string) error {
 	}
 }
 
-func (l *Limiter) removeAction(userid string, i int) {
-	l.Logs[userid][i] = l.Logs[userid][len(l.Logs[userid])-1]
+func (l *Limiter) removeAction(userid string, a *Action) {
+	index := 0
+	for i := 0; i < len(l.Logs[userid]); i++ {
+		if l.Logs[userid][i] == a {
+			index = i
+			break
+		}
+	}
+	l.Logs[userid][index] = l.Logs[userid][len(l.Logs[userid])-1]
 	l.Logs[userid] = l.Logs[userid][:len(l.Logs[userid])-1]
 }
