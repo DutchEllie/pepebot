@@ -10,14 +10,20 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 	if m.Author.Bot {
 		return
 	}
-	app.infoLog.Printf("Adding entry\n")
 	app.limiter.LogInteraction(m.Author.ID, "messagecreate")
 
 	/* Check if the user is even allowed by the rate limiter */
 	err := app.limiter.CheckAllowed(m.Author.ID)
 	if err != nil {
 		/* normally don't send, but now do for debug purposes. This is the admin bot channel */
-		app.unknownError(err, s, true, "815952128106430514")
+		//app.unknownError(err, s, true, "815952128106430514")
+		app.infoLog.Printf("Rate limit exceeded by used %s", m.Author.Username)
+		channel, err := s.UserChannelCreate(m.Author.ID)
+		if err != nil {
+			app.errorLog.Printf("Cannot create user PM channel to inform about rate limit, %s", err.Error())
+			return
+		}
+		s.ChannelMessageSend(channel.ID, "You exceeded the rate limit for the server, please stop spamming")
 		return
 	}
 
