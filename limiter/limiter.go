@@ -13,14 +13,15 @@ If it is in the limit, then count. If the amount of interactions is higher than 
 type Limiter struct {
 	TimeLimit time.Duration
 	RateLimit int
-	Logs      map[string][]Action
+	Logs      map[string][]*Action
 }
 
 func (l *Limiter) LogInteraction(userid string, action string) {
-	l.Logs[userid] = append(l.Logs[userid], Action{
+	ac := &Action{
 		Timestamp: time.Now(),
 		Type:      action,
-	})
+	}
+	l.Logs[userid] = append(l.Logs[userid], ac)
 }
 
 /* CheckAllowed counts the amount of log entries for a given userid, making sure to delete and not count the expired ones.

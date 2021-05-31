@@ -67,6 +67,7 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 		app.findTrigger(s, m)
 	}
 
+	app.infoLog.Printf("Adding entry\n")
 	app.limiter.LogInteraction(m.Author.ID, "messagecreate")
 
 }
