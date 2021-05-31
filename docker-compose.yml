@@ -3,7 +3,7 @@ version: "3.7"
 services:
     app:
         container_name: pepebot_server
-        build: .
+        image: dutchellie/pepebot
         restart: always
         depends_on:
             - db
