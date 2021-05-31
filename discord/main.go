@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -33,6 +34,8 @@ func main() {
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
 	discordToken := os.Getenv("DISCORD_TOKEN")
+	rateLimit := os.Getenv("RATE_LIMIT")
+	timeLimit := os.Getenv("TIME_LIMIT")
 	dsn := fmt.Sprintf("%s:%s@tcp(db:3306)/badwords?parseTime=true", dbUser, dbPass)
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
@@ -42,9 +45,19 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+	rateLim, err := strconv.Atoi(rateLimit)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
+	timeLim, err := strconv.Atoi(timeLimit)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	limiter := &limiter.Limiter{
-		RateLimit: 5,
-		TimeLimit: time.Second * 15,
+		RateLimit: rateLim,
+		TimeLimit: time.Duration(timeLim * int(time.Second)),
 		Logs:      make(map[string][]*limiter.Action),
 	}
 
