@@ -43,7 +43,7 @@ func (l *Limiter) CheckAllowed(userid string) error {
 		l.removeAction(userid, expiredEntries[i])
 	}
 
-	if counter >= l.RateLimit {
+	if counter > l.RateLimit {
 		return errors.New("rate limit exceeded")
 	} else {
 		return nil
