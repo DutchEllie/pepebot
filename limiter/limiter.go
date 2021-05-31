@@ -2,7 +2,6 @@ package limiter
 
 import (
 	"errors"
-	"log"
 	"time"
 )
 
@@ -44,7 +43,6 @@ func (l *Limiter) CheckAllowed(userid string) error {
 		l.removeAction(userid, expiredEntries[i])
 	}
 
-	log.Printf("Checking if %d is >= %d", counter, l.RateLimit)
 	if counter >= l.RateLimit {
 		return errors.New("rate limit exceeded")
 	} else {
