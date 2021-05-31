@@ -11,7 +11,15 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 		return
 	}
 
-	/* Checking if the message starts with the trigger specified in application struct 
+	/* Check if the user is even allowed by the rate limiter */
+	err := app.limiter.CheckAllowed(m.Author.ID)
+	if err != nil {
+		/* normally don't send, but now do for debug purposes. This is the admin bot channel */
+		app.unknownError(err, s, true, "815952128106430514")
+		return
+	}
+
+	/* Checking if the message starts with the trigger specified in application struct
 	if it does then we start the switch statement to trigger the appropriate function
 	if it does not then we check if it contains a triggerword from the database */
 	if strings.HasPrefix(m.Content, app.trigger) {
@@ -52,14 +60,13 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 			case "removeadmin":
 				app.removeAdmin(s, m, splitCommand)
 			}
-			
+
 		}
 	} else {
 		/* If the trigger wasn't the prefix of the message, we need to check all the words for a trigger */
 		app.findTrigger(s, m)
 	}
 
-	
-	
-}
+	app.limiter.LogInteraction(m.Author.ID, "messagecreate")
 
+}

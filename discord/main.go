@@ -6,8 +6,10 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"quenten.nl/pepebot/limiter"
 	"quenten.nl/pepebot/models/mysql"
 )
 
@@ -15,15 +17,16 @@ import (
 It also has many methods for the different functions of the bot.
 These methods are mostly located in discord.go */
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	badwords *mysql.BadwordModel
-	adminroles *mysql.AdminRolesModel
-	trigger string
+	errorLog    *log.Logger
+	infoLog     *log.Logger
+	badwords    *mysql.BadwordModel
+	adminroles  *mysql.AdminRolesModel
+	trigger     string
 	allBadWords map[string][]string
+	limiter     *limiter.Limiter
 
 	active bool
-	stop bool
+	stop   bool
 }
 
 func main() {
@@ -39,12 +42,18 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+	limiter := &limiter.Limiter{
+		RateLimit: 5,
+		TimeLimit: time.Second * 15,
+	}
+
 	app := &application{
-		infoLog: infoLog,
-		errorLog: errorLog,
-		badwords: &mysql.BadwordModel{DB: db},
+		infoLog:    infoLog,
+		errorLog:   errorLog,
+		badwords:   &mysql.BadwordModel{DB: db},
 		adminroles: &mysql.AdminRolesModel{DB: db},
-		trigger: "!pepe",
+		trigger:    "!pepe",
+		limiter:    limiter,
 	}
 
 	app.allBadWords, err = app.badwords.AllWords()
