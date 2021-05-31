@@ -69,6 +69,22 @@ func (app *application) sendNigelGif(s *discordgo.Session, m *discordgo.MessageC
 	}
 }
 
+func (app *application) sendMonday(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if time.Now().Weekday().String() != "Monday" {
+		_, err := s.ChannelMessageSend(m.ChannelID, "This command only works on mondays")
+		if err != nil {
+			app.errorLog.Print(err)
+			return
+		}
+		return
+	}
+	_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=EkALyaMjoXw")
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+}
+
 func (app *application) sendTuesday(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if time.Now().Weekday().String() != "Tuesday" {
 		_, err := s.ChannelMessageSend(m.ChannelID, "This command only works on tuesdays")

@@ -47,6 +47,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 				app.sendCringe(s, m)
 			case "gif":
 				app.sendNigelGif(s, m)
+			case "monday":
+				app.sendMonday(s, m)
 			case "tuesday":
 				app.sendTuesday(s, m)
 			case "wednesday":
