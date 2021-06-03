@@ -62,6 +62,10 @@ func main() {
 		Logs:      make(map[string][]*limiter.Action),
 	}
 
+	mux := NewCommandMux()
+	mux.prefix = "!newpepe"
+	mux.HandleFunc("newcringe", newCringe)
+
 	app := &application{
 		infoLog:    infoLog,
 		errorLog:   errorLog,
@@ -69,6 +73,7 @@ func main() {
 		adminroles: &mysql.AdminRolesModel{DB: db},
 		trigger:    "!pepe",
 		limiter:    limiter,
+		commandMux: mux,
 	}
 
 	app.allBadWords, err = app.badwords.AllWords()

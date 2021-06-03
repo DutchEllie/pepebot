@@ -10,6 +10,12 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 	if m.Author.Bot {
 		return
 	}
+
+	if strings.HasPrefix(m.Content, "!newpepe") {
+		app.commandMux.Execute(s, m)
+		return
+	}
+
 	app.limiter.LogInteraction(m.Author.ID, "messagecreate")
 
 	/* Check if the user is even allowed by the rate limiter */
