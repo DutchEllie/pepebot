@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -29,20 +27,20 @@ type CommandMux struct {
 
 func NewCommandMux() *CommandMux { return new(CommandMux) }
 
-func (c *CommandMux) removeFirst(command string) (string, error) {
+func (c *CommandMux) removeFirst(command string) string {
 	split := strings.SplitN(strings.TrimSpace(command), " ", 2)
 	if len(split) > 1 {
-		return split[1], nil
+		return split[1]
 	}
-	return "", fmt.Errorf("separation impossible on string: %s", command)
+	return ""
 }
 
-func (c *CommandMux) firstCommand(command string) (string, error) {
+func (c *CommandMux) firstCommand(command string) string {
 	split := strings.SplitN(strings.TrimSpace(command), " ", 2)
 	if len(split) > 0 {
-		return split[0], nil
+		return split[0]
 	}
-	return "", fmt.Errorf("separation impossible on string: %s", command)
+	return ""
 }
 
 func (c *CommandMux) Handler(m *discordgo.MessageCreate) (cmd Command, pattern string) {
@@ -54,15 +52,8 @@ func (c *CommandMux) Handler(m *discordgo.MessageCreate) (cmd Command, pattern s
 			return c.m[c.prefix].h, c.m[c.prefix].pattern
 		}
 
-		m, err := c.removeFirst(m.Content) /* Here the prefix is removed, so we're left with only the first keyword */
-		if err != nil {
-			return nil, ""
-		}
-		fc, err := c.firstCommand(m)
-		if err != nil {
-			return nil, ""
-		}
-		cmd, ok := c.m[fc]
+		m := c.removeFirst(m.Content) /* Here the prefix is removed, so we're left with only the first keyword */
+		cmd, ok := c.m[c.firstCommand(m)]
 		if ok {
 			return cmd.h, cmd.pattern
 		}
@@ -75,7 +66,7 @@ func (c *CommandMux) Handler(m *discordgo.MessageCreate) (cmd Command, pattern s
 func (c *CommandMux) Execute(s *discordgo.Session, m *discordgo.MessageCreate) {
 	h, _ := c.Handler(m)
 	if h == nil {
-		log.Printf("There exists no handler for %s\n", m.Content)
+		//log.Printf("There exists no handler for %s\n", m.Content)
 		return
 	}
 	h.Execute(s, m)
