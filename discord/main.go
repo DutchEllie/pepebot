@@ -80,7 +80,7 @@ func main() {
 		app.errorLog.Fatal(err)
 	}
 
-	mux.Handle("newcringe", app.LogToConsole(HandlerFunc(newCringe)))
+	mux.HandleFunc("newcringe", newCringe)
 	mux.HandleFunc(mux.prefix, app.sendPepe)
 
 	/* token, err := app.readAuthToken()

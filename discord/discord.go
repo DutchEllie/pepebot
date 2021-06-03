@@ -11,10 +11,12 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 		return
 	}
 
-	if strings.HasPrefix(m.Content, "!newpepe") {
-		app.commandMux.Execute(s, m)
+	app.LogToConsole(app.commandMux).Execute(s, m)
+
+	/* if strings.HasPrefix(m.Content, "!newpepe") {
+		app.LogToConsole(app.commandMux).Execute(s, m)
 		return
-	}
+	} */
 
 	app.limiter.LogInteraction(m.Author.ID, "messagecreate")
 
