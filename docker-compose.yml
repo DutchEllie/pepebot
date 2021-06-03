@@ -3,6 +3,7 @@ version: "3.7"
 services:
     app:
         container_name: pepebot_server
+        image: dutchellie/pepebot
         build: .
         restart: always
         depends_on:
@@ -11,6 +12,8 @@ services:
             - DB_USER=
             - DB_PASS=
             - DISCORD_TOKEN=
+            - RATE_LIMIT=
+            - TIME_LIMIT=
     db:
         container_name: pepebot_database
         image: mysql:8.0
