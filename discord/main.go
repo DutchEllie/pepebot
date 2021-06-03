@@ -64,8 +64,6 @@ func main() {
 
 	mux := NewCommandMux()
 	mux.prefix = "!newpepe"
-	mux.HandleFunc("newcringe", newCringe)
-	mux.HandleFunc(mux.prefix, newSendPepe)
 
 	app := &application{
 		infoLog:    infoLog,
@@ -81,6 +79,9 @@ func main() {
 	if err != nil {
 		app.errorLog.Fatal(err)
 	}
+
+	mux.Handle("newcringe", app.LogToConsole(HandlerFunc(newCringe)))
+	mux.HandleFunc(mux.prefix, app.sendPepe)
 
 	/* token, err := app.readAuthToken()
 	if err != nil {
