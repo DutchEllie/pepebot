@@ -25,6 +25,7 @@ type application struct {
 	trigger     string
 	allBadWords map[string][]string
 	limiter     *limiter.Limiter
+	commandMux  *CommandMux
 
 	active bool
 	stop   bool
