@@ -63,7 +63,7 @@ func main() {
 	}
 
 	mux := NewCommandMux()
-	mux.prefix = "!newpepe"
+	mux.prefix = "!pepe"
 
 	app := &application{
 		infoLog:    infoLog,
@@ -80,7 +80,21 @@ func main() {
 		app.errorLog.Fatal(err)
 	}
 
-	mux.HandleFunc("newcringe", newCringe)
+	mux.HandleFunc("cringe", app.sendCringe)
+	mux.HandleFunc("gif", app.sendNigelGif)
+	mux.HandleFunc("tuesday", app.sendTuesday)
+	mux.HandleFunc("wednesday", app.sendWednesday)
+	mux.HandleFunc("github", app.sendGithub)
+	mux.HandleFunc("source", app.sendGithub)
+	/* The admin commands are left out for now.
+	They have specialised functions and don't work yet.
+	Their code is left unworking and nonfunctional to be fixed
+	sometime in the future... sometime
+
+	Another thing left out is the bad words feature.
+	It goes underused and has had it's joke.
+
+	Oh and no one must be sad to see the death of the spam command...*/
 	mux.HandleFunc(mux.prefix, app.sendPepe)
 
 	/* token, err := app.readAuthToken()
