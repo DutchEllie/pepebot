@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"quenten.nl/pepebot/discord/mux"
 	"quenten.nl/pepebot/limiter"
 	"quenten.nl/pepebot/models/mysql"
 )
@@ -25,10 +26,7 @@ type application struct {
 	trigger     string
 	allBadWords map[string][]string
 	limiter     *limiter.Limiter
-	commandMux  *CommandMux
-
-	active bool
-	stop   bool
+	commandMux  *mux.CommandMux
 }
 
 func main() {
@@ -62,8 +60,8 @@ func main() {
 		Logs:      make(map[string][]*limiter.Action),
 	}
 
-	mux := NewCommandMux()
-	mux.prefix = "!pepe"
+	server := mux.NewCommandMux()
+	server.Prefix = "!pepe"
 
 	app := &application{
 		infoLog:    infoLog,
@@ -72,7 +70,7 @@ func main() {
 		adminroles: &mysql.AdminRolesModel{DB: db},
 		trigger:    "!pepe",
 		limiter:    limiter,
-		commandMux: mux,
+		commandMux: server,
 	}
 
 	app.allBadWords, err = app.badwords.AllWords()
@@ -80,12 +78,12 @@ func main() {
 		app.errorLog.Fatal(err)
 	}
 
-	mux.HandleFunc("cringe", app.sendCringe)
-	mux.HandleFunc("gif", app.sendNigelGif)
-	mux.HandleFunc("tuesday", app.sendTuesday)
-	mux.HandleFunc("wednesday", app.sendWednesday)
-	mux.HandleFunc("github", app.sendGithub)
-	mux.HandleFunc("source", app.sendGithub)
+	server.HandleFunc("cringe", app.sendCringe)
+	server.HandleFunc("gif", app.sendNigelGif)
+	server.HandleFunc("tuesday", app.sendTuesday)
+	server.HandleFunc("wednesday", app.sendWednesday)
+	server.HandleFunc("github", app.sendGithub)
+	server.HandleFunc("source", app.sendGithub)
 	/* The admin commands are left out for now.
 	They have specialised functions and don't work yet.
 	Their code is left unworking and nonfunctional to be fixed
@@ -95,7 +93,7 @@ func main() {
 	It goes underused and has had it's joke.
 
 	Oh and no one must be sad to see the death of the spam command...*/
-	mux.HandleFunc(mux.prefix, app.sendPepe)
+	server.HandleFunc(server.Prefix, app.sendPepe)
 
 	/* token, err := app.readAuthToken()
 	if err != nil {

@@ -1,14 +1,12 @@
-package main
+package mux
 
 import (
 	"strings"
+	"sync"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-/* The Command interface is a template for the implementation of a command of the discord bot.
-The actual command will be executed in the Execute function.
-All the actual Command objects will be (similarly to Handlers in the net/http package) put into a CommandMux */
 type Command interface {
 	Execute(s *discordgo.Session, m *discordgo.MessageCreate)
 }
@@ -21,8 +19,9 @@ func (f HandlerFunc) Execute(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 /* The CommandMux struct is a type of mux for Discord commands. It's modelled after the net/http ServeMux */
 type CommandMux struct {
+	mu     sync.RWMutex
 	m      map[string]muxEntry
-	prefix string
+	Prefix string
 }
 
 func NewCommandMux() *CommandMux { return new(CommandMux) }
@@ -44,12 +43,14 @@ func (c *CommandMux) firstCommand(command string) string {
 }
 
 func (c *CommandMux) Handler(m *discordgo.MessageCreate) (cmd Command, pattern string) {
-	if strings.HasPrefix(m.Content, c.prefix) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	if strings.HasPrefix(m.Content, c.Prefix) {
 		/* Special case for this bot alone. It has a command that is only it's prefix
 		So we check if the whole message is only the prefix before proceding.
 		So please don't forget to add the command, since it's totally hardcoded here. */
-		if strings.TrimSpace(m.Content) == c.prefix {
-			return c.m[c.prefix].h, c.m[c.prefix].pattern
+		if strings.TrimSpace(m.Content) == c.Prefix {
+			return c.m[c.Prefix].h, c.m[c.Prefix].pattern
 		}
 
 		m := c.removeFirst(m.Content) /* Here the prefix is removed, so we're left with only the first keyword */
@@ -73,6 +74,8 @@ func (c *CommandMux) Execute(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func (c *CommandMux) Handle(pattern string, handler Command) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	if pattern == "" {
 		panic("commandmux: invalid pattern")
 	}

@@ -13,7 +13,7 @@ import (
 
 /* --------		DB Helper functions		-------- */
 
-func openDB(dsn string) (*sql.DB, error){
+func openDB(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,7 @@ func openDB(dsn string) (*sql.DB, error){
 	return db, nil
 }
 
-func (app *application) updateAllBadWords() (error) {
+func (app *application) updateAllBadWords() error {
 	var err error
 	app.allBadWords, err = app.badwords.AllWords()
 	if err != nil {
@@ -39,7 +39,7 @@ func (app *application) updateAllBadWords() (error) {
 
 func (app *application) unknownError(err error, s *discordgo.Session, notifyDiscord bool, channelID string) {
 	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
-    app.errorLog.Output(2, trace)
+	app.errorLog.Output(2, trace)
 
 	if notifyDiscord {
 		msg := fmt.Sprintf("An unknown error occured, error message attached below. Stack trace is in the server logs.\n%s", err.Error())
