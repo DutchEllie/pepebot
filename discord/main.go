@@ -27,6 +27,9 @@ type application struct {
 	allBadWords map[string][]string
 	limiter     *limiter.Limiter
 	commandMux  *mux.CommandMux
+
+	active bool
+	stop bool
 }
 
 func main() {
