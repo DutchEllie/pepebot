@@ -9,7 +9,7 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 		return
 	}
 
-	app.LogToConsole(app.commandMux).Execute(s, m)
+	app.LogInteraction(app.LogToConsole(app.commandMux)).Execute(s, m)
 
 	/* if strings.HasPrefix(m.Content, "!newpepe") {
 		app.LogToConsole(app.commandMux).Execute(s, m)
