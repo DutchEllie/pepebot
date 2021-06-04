@@ -11,6 +11,12 @@ type Command interface {
 	Execute(s *discordgo.Session, m *discordgo.MessageCreate)
 }
 
+func NotFound(s *discordgo.Session, m *discordgo.MessageCreate) {
+	return
+}
+
+func NotFoundHandler() Command { return HandlerFunc(NotFound) }
+
 type HandlerFunc func(s *discordgo.Session, m *discordgo.MessageCreate)
 
 func (f HandlerFunc) Execute(s *discordgo.Session, m *discordgo.MessageCreate) {
