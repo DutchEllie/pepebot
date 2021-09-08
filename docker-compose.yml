@@ -24,6 +24,13 @@ services:
             MYSQL_PASSWORD:
         volumes:
             - pepe_db_data:/var/lib/mysql
-
+    pepe_service:
+        container_name: pepebot_service
+        image: dutchellie/pepebot_service:latest
+        restart: always
+        environment: 
+            - PEPE_DIR=/pepe/1.00
+        volumes:
+            - /your/pepe/folder:/pepe #edit this
 volumes:
     pepe_db_data: {}
