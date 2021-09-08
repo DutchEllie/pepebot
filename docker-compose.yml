@@ -13,6 +13,7 @@ services:
             - DISCORD_TOKEN=
             - RATE_LIMIT=
             - TIME_LIMIT=
+            - PEPE_SERVER=
     db:
         container_name: pepebot_database
         image: mysql:8.0
