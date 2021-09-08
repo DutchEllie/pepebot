@@ -24,6 +24,7 @@ type application struct {
 	adminroles  *mysql.AdminRolesModel
 	trigger     string
 	allBadWords map[string][]string
+	pepeServer  string
 	limiter     *limiter.Limiter
 
 	active bool
@@ -36,6 +37,7 @@ func main() {
 	discordToken := os.Getenv("DISCORD_TOKEN")
 	rateLimit := os.Getenv("RATE_LIMIT")
 	timeLimit := os.Getenv("TIME_LIMIT")
+	pepeServer := os.Getenv("PEPE_SERVER")
 	dsn := fmt.Sprintf("%s:%s@tcp(db:3306)/badwords?parseTime=true", dbUser, dbPass)
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
@@ -68,6 +70,7 @@ func main() {
 		adminroles: &mysql.AdminRolesModel{DB: db},
 		trigger:    "!pepe",
 		limiter:    limiter,
+		pepeServer: pepeServer,
 	}
 
 	app.allBadWords, err = app.badwords.AllWords()
