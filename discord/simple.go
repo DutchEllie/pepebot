@@ -35,8 +35,9 @@ func (app *application) getPepeLink() (string, error) {
 
 	// The above function is old and useless. The website bbwroller.com is down
 	// o7
-
-	resp, err := http.Get(app.pepeServer + "/pepe")
+	url := "http://" + app.pepeServer + "/pepe"
+	app.infoLog.Printf("Request url: %s", url)
+	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}
