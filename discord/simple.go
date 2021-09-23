@@ -13,30 +13,7 @@ import (
 )
 
 func (app *application) getPepeLink() (string, error) {
-	/*resp, err := http.Get("http://bbwroller.com/random")
-	if err != nil {
-		return "", err
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-	rep, err := regexp.Compile("/static.*\\.jpg")
-	if err != nil {
-		return "", err
-	}
-	pepes := rep.FindAllString(string(body), 200)
-	if pepes == nil {
-		return "", err
-	}
-	randomIndex := rand.Intn(35)
-	url := "https://bbwroller.com"
-	url += pepes[randomIndex]*/
-
-	// The above function is old and useless. The website bbwroller.com is down
-	// o7
 	url := "http://" + app.pepeServer + "/pepe"
-	app.infoLog.Printf("Request url: %s", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
@@ -202,7 +179,7 @@ func (app *application) sendManyPepes(s *discordgo.Session, m *discordgo.Message
 			return
 		}
 
-		if len(msg+link) > 1950 {
+		if len(msg+link) > 512 {
 			s.ChannelMessageSend(m.ChannelID, msg)
 			msg = ""
 			time.Sleep(time.Millisecond * 500)
