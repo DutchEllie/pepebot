@@ -5,6 +5,7 @@ services:
         container_name: pepebot_server
         image: dutchellie/pepebot
         restart: always
+        user: 1000:1000
         depends_on:
             - db
         environment:
