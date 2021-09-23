@@ -45,6 +45,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/pepe", app.sendPepe)
+	mux.HandleFunc("/reload", app.reloadList)
 
 	app.infoLog.Printf("Starting server at :4000\n")
 	err = http.ListenAndServe(":4000", mux)
@@ -62,4 +63,22 @@ func (app *application) sendPepe(w http.ResponseWriter, r *http.Request) {
 	URL := baseURL + app.pepe_list[number]
 
 	w.Write([]byte(URL))
+}
+
+func (app *application) reloadList(w http.ResponseWriter, r *http.Request) {
+	file, err := os.Open(app.pepe_dir)
+	if err != nil {
+		app.errorLog.Printf("Error opening pepe directory\n")
+		return
+	}
+	defer file.Close()
+	pepe_list, err := file.Readdirnames(0)
+	if err != nil {
+		app.errorLog.Printf("Error reading pepe directory file names\n")
+		return
+	}
+	app.pepe_list = pepe_list
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("200 - Reloaded the list of pepes"))
 }
