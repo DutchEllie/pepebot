@@ -123,6 +123,14 @@ func (app *application) sendGithub(s *discordgo.Session, m *discordgo.MessageCre
 	}
 }
 
+func (app *application) sendPeski(s *discordgo.Session, m *discordgo.MessageCreate) {
+	_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=P0jHTCJYm44")
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+}
+
 func (app *application) sendManyPepes(s *discordgo.Session, m *discordgo.MessageCreate, splitCommand []string) {
 	override := false
 

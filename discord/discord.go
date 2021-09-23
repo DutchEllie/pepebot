@@ -55,6 +55,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 				app.sendWednesday(s, m)
 			case "github", "source":
 				app.sendGithub(s, m)
+			case "peski", "rotterdam":
+				app.sendPeski(s, m)
 			/* --- Bot commands for words --- */
 			case "spam":
 				app.sendManyPepes(s, m, splitCommand)
