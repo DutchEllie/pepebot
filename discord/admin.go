@@ -1,6 +1,10 @@
 package main
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"net/http"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 func (app *application) addWord(s *discordgo.Session, m *discordgo.MessageCreate, splitCommand []string) {
 	/* Check if admin */
@@ -25,8 +29,6 @@ func (app *application) addWord(s *discordgo.Session, m *discordgo.MessageCreate
 		s.ChannelMessageSend(m.ChannelID, err.Error())
 		return
 	}
-
-	
 
 	err = app.updateAllBadWords()
 	if err != nil {
@@ -164,4 +166,27 @@ func (app *application) removeAdmin(s *discordgo.Session, m *discordgo.MessageCr
 
 	app.successMessage(s, m)
 
+}
+
+func (app *application) reloadPepeList(s *discordgo.Session, m *discordgo.MessageCreate) {
+	/* Check if admin */
+	r, err := app.checkIfAdmin(s, m)
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+	if !r {
+		return
+	}
+
+	s.ChannelMessageSend(m.ChannelID, "Reloading list of pepes")
+	url := "http://" + app.pepeServer + "/reload"
+	_, err = http.Get(url)
+	if err != nil {
+		app.errorLog.Print(err)
+		s.ChannelMessageSend(m.ChannelID, "An error occured!")
+		return
+	}
+
+	app.successMessage(s, m)
 }
