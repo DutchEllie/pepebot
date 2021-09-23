@@ -69,6 +69,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 				app.addAdmin(s, m, splitCommand)
 			case "removeadmin":
 				app.removeAdmin(s, m, splitCommand)
+			case "reload":
+				app.reloadPepeList(s, m)
 			}
 
 		}
