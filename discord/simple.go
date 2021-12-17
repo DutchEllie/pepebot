@@ -149,13 +149,13 @@ func (app *application) sendPeski(s *discordgo.Session, m *discordgo.MessageCrea
 }
 
 func (app *application) sendProper(s *discordgo.Session, m *discordgo.MessageCreate) {
-	responseList := []string{"Proper", "Gentoo", "Based", "Best practice", "Tiled WM", "Emacs", "Lisp"}
+	responseList := []string{"That's proper", "I use Gentoo", "So based", "That's best practice", "Emacs is the best", "Lisp is so fucking based", "My website is here https://forestofunix.xyz\nIt's written in Lisp. It's so based!"}
 	source := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(source)
 
 	index := rng.Intn(len(responseList))
 
-	_, err := s.ChannelMessageSend(m.ChannelID, responseList[index])
+	_, err := s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("\"%s\"\n-Sebastiaan", responseList[index]))
 	if err != nil {
 		app.errorLog.Print(err)
 		return
