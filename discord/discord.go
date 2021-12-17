@@ -53,6 +53,8 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 				app.sendTuesday(s, m)
 			case "wednesday":
 				app.sendWednesday(s, m)
+			case "friday":
+				app.sendFriday(s, m)
 			case "github", "source":
 				app.sendGithub(s, m)
 			case "peski", "rotterdam":

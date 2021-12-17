@@ -115,6 +115,22 @@ func (app *application) sendWednesday(s *discordgo.Session, m *discordgo.Message
 	}
 }
 
+func (app *application) sendFriday(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if time.Now().Weekday().String() != "Friday" {
+		_, err := s.ChannelMessageSend(m.ChannelID, "This command only works on fridays")
+		if err != nil {
+			app.errorLog.Print(err)
+			return
+		}
+		return
+	}
+	_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=kfVsfOSbJY0")
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+}
+
 func (app *application) sendGithub(s *discordgo.Session, m *discordgo.MessageCreate) {
 	_, err := s.ChannelMessageSend(m.ChannelID, "My code is hosted publicly over at https://github.com/DutchEllie/pepebot")
 	if err != nil {
