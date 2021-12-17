@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
@@ -141,6 +142,20 @@ func (app *application) sendGithub(s *discordgo.Session, m *discordgo.MessageCre
 
 func (app *application) sendPeski(s *discordgo.Session, m *discordgo.MessageCreate) {
 	_, err := s.ChannelMessageSend(m.ChannelID, "https://www.youtube.com/watch?v=P0jHTCJYm44")
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+}
+
+func (app *application) sendProper(s *discordgo.Session, m *discordgo.MessageCreate) {
+	responseList := []string{"Proper", "Gentoo", "Based", "Best practice", "Tiled WM", "Emacs", "Lisp"}
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
+
+	index := rng.Intn(len(responseList))
+
+	_, err := s.ChannelMessageSend(m.ChannelID, responseList[index])
 	if err != nil {
 		app.errorLog.Print(err)
 		return
