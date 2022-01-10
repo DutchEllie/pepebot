@@ -29,6 +29,16 @@ func (app *application) getPepeLink() (string, error) {
 }
 
 func (app *application) sendPepe(s *discordgo.Session, m *discordgo.MessageCreate) {
+	ch, err := s.Channel(m.ChannelID)
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+	if !strings.Contains(ch.Topic, "pepebot allowed") {
+		app.errorLog.Print("Can't send pepe within this channel")
+		return
+	}
+
 	url, err := app.getPepeLink()
 	if err != nil {
 		app.errorLog.Print(err)
@@ -149,7 +159,7 @@ func (app *application) sendPeski(s *discordgo.Session, m *discordgo.MessageCrea
 }
 
 func (app *application) sendProper(s *discordgo.Session, m *discordgo.MessageCreate) {
-	responseList := []string{"That's proper", "I use Gentoo", "So based", "That's best practice", "Emacs is the best", "Lisp is so fucking based", "My website is here https://forestofunix.xyz\nIt's written in Lisp. It's so based!"}
+	responseList := []string{"That's proper", "I use Gentoo", "So based", "That's best practice", "Emacs is the best", "LISP is so fucking based", "My website is here https://forestofunix.xyz\nIt's written in Lisp. It's so based!", "Python is LISP based"}
 	source := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(source)
 
@@ -163,6 +173,16 @@ func (app *application) sendProper(s *discordgo.Session, m *discordgo.MessageCre
 }
 
 func (app *application) sendManyPepes(s *discordgo.Session, m *discordgo.MessageCreate, splitCommand []string) {
+	ch, err := s.Channel(m.ChannelID)
+	if err != nil {
+		app.errorLog.Print(err)
+		return
+	}
+
+	if !strings.Contains(ch.Topic, "pepebot allowed") {
+		app.errorLog.Print("Can't send pepe within this channel")
+		return
+	}
 	override := false
 
 	/* [0] is !pepe, [1] is spam, [2] is amount, [3] is override*/
